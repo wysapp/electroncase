@@ -15,6 +15,7 @@ storage.get('activeSectionButtonId', function(err, id) {
   if (id && id.length) {
     showMainContent();
     const section = document.getElementById(id);
+    
     if ( section) section.click();
   } else {
     activateDefaultSection();
@@ -32,6 +33,20 @@ document.body.addEventListener('click', function(event) {
     hideAllModals();
   }
 })
+
+function handleSectionTrigger(event) {
+  hideAllSectionsAndDeselectButtons();
+
+  event.target.classList.add('is-selected');
+
+  const sectionId = event.target.dataset.section + '-section';
+  document.getElementById(sectionId).classList.add('is-shown');
+
+  const buttonId = event.target.getAttribute('id');
+  storage.set('activeSectionButtonId', buttonId, function(err) {
+    if (err) return console.error(err);
+  })
+}
 
 function activateDefaultSection() {
   document.getElementById('button-windows').click();

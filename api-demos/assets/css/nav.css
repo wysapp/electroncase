@@ -10,9 +10,8 @@
   visibility: hidden;
   opacity: 0;
 }
-
 .nav.is-shown {
-  visibility: visible;
+  visibility: visible;;
   opacity: 1;
 }
 
@@ -42,6 +41,8 @@
   top: 1.5rem; /* magic */
   right: 1.75rem; /* magic */
 }
+
+
 
 .nav-item {
   padding: .5em 0;
@@ -97,4 +98,52 @@
   font-weight: 600;
   color: var(--color-strong);
   pointer-events: none; /* makes it invisible to clicks */
+}
+
+.nav-footer {
+  margin-top: 1rem;
+  padding: 2rem;
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+}
+
+.nav-footer-icon {
+  width: calc(770px / 6.5);
+  height: calc(88px / 6.5);
+}
+
+.nav-footer a {
+  outline: none;
+}
+
+.nav-footer-button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  margin-bottom: .75rem;
+  line-height: 2;
+  text-align: left;
+  font: inherit;
+  font-size: 13px;
+  color: inherit;
+  border: none;
+  background-color: transparent;
+  cursor: default;
+  outline: none;
+  text-align: center;
+}
+.nav-footer-button:focus {
+  color: var(--color-strong);
+}
+
+.nav-footer-logo {
+  color: hsl(0,0%,66%);
+}
+.nav-footer-logo:focus {
+  color: hsl(0,0%,33%);
+}
+
+/* Remove border on the logo */
+.nav-footer-logo.nav-footer-logo {
+  border-bottom: none;
 }
