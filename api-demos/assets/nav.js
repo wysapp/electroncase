@@ -58,6 +58,27 @@ function showMainContent() {
   document.querySelector('.js-content').classList.add('is-shown');
 }
 
+
+function hideAllModals() {
+  const modals = document.querySelectorAll('.modal.is-shown');
+  Array.prototype.forEach.call(modals, function(modal) {
+    modal.classList.remove('is-shown');
+  })
+  showMainContent();
+}
+
+function hideAllSectionsAndDeselectButtons() {
+  const sections = document.querySelectorAll('.js-section.is-shown');
+  Array.prototype.forEach.call(sections, function(section) {
+    section.classList.remove('is-shown');
+  })
+
+  const buttons = document.querySelectorAll('.nav-button.is-selected');
+  Array.prototype.forEach.call(buttons, function(button) {
+    button.classList.remove('is-selected');
+  })
+}
+
 function displayAbout() {
   document.querySelector('#about-modal').classList.add('is-shown');
 }
