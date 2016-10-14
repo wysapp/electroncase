@@ -13,6 +13,7 @@ Array.prototype.forEach.call(demoBtns, function(btn) {
 })
 
 storage.get('activeDemoButtonId', function(err, id) {
+  
   if (err) return console.error(err);
   if (id && id.length) document.getElementById(id).click();
 })
