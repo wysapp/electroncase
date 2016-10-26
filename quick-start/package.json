@@ -4,8 +4,10 @@
   "description": "A minimal Electron application",
   "main": "main/index.js",
   "scripts": {
+    "start:dev": "cross-env NODE_ENV=development ./node_modules/.bin/electron . --enable-logging",
     "start": "electron .",
-    "webpack:dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot"
+    "webpack:dev": "cross-env NODE_ENV=development webpack-dev-server --inline --hot",
+    "webpack:build": "cross-env NODE_ENV=production webpack -p"
   },
   "repository": "https://github.com/electron/electron-quick-start",
   "keywords": [
@@ -18,9 +20,16 @@
   "author": "GitHub",
   "license": "CC0-1.0",
   "dependencies": {
+    "auto-launch": "^2.0.1",
+    "classnames": "^2.2.3",
     "configstore": "^2.0.0",
+    "electron-positioner": "^3.0.0",
+    "electron-squirrel-startup": "git+https://github.com/tofuness/electron-squirrel-startup.git",
     "history": "^2.1.1",
     "lodash": "^4.13.1",
+    "moment": "^2.13.0",
+    "moment-timezone": "^0.5.4",
+    "node-uuid": "^1.4.7",
     "react": "^15.2.0",
     "react-addons-css-transition-group": "^15.1.0",
     "react-autosize-textarea": "^0.3.1",
