@@ -11,7 +11,7 @@ const settingsStore = new Configstore(
 const defaultSettings = {
   minimizeToTray: true,
   APIBase: 'http://localhost:8080',
-  listName: 'cash',
+  listName: 'toshocat',
   allowMetrics: true,
   mediaDetection: true,
   runOnStartup: true,
