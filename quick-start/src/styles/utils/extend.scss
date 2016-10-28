@@ -76,6 +76,18 @@
 @import url(https://file.myfontastic.com/E4KG3MY5eJGdB96mnocJZJ/icons.css);
 
 
+.ts {
+  transition: all 220ms cubic-bezier(0, .33, .2, 1);
+}
+
+.ts-show {
+  transition: all 800ms cubic-bezier(.0.75, 0.82, 0.165, 1);
+}
+
+.ts-out {
+  transition: all 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+}
+
 .cf:before, .cf:after {
   content: " ";
   display: table;

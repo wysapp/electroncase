@@ -91,6 +91,15 @@ app.on('ready', ()=> {
     tray.destroy();
     app.quit();
   });
+
+
+  const scrobble = () => {
+    if (settings.get('mediaDetection')) {
+      
+    }
+  }
+
+
 });
 
 

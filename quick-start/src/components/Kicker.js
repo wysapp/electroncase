@@ -22,6 +22,18 @@ class Kicker extends Component {
       default: 
         break;
     }
+
+    ipcRenderer.removeAllListeners('media-detected');
+    ipcRenderer.removeAllListeners('media-lost');
+    ipcRenderer.on('media-detected', (event, detectedMedia) => {
+
+    })
+
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeAllListeners('media-detected');
+    ipcRenderer.removeAllListeners('media-lost');
   }
 
   render() {
