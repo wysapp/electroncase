@@ -75,26 +75,91 @@
 }
 @import url(https://file.myfontastic.com/E4KG3MY5eJGdB96mnocJZJ/icons.css);
 
-
+.ns {
+	-webkit-user-select: none;
+	user-select: none;
+	outline-style: none;
+}
+.st {
+	-webkit-user-select: text;
+	user-select: text;
+}
 .ts {
-  transition: all 220ms cubic-bezier(0, .33, .2, 1);
+	transition: all 220ms cubic-bezier(0, .33, .2, 1);
 }
-
-.ts-show {
-  transition: all 800ms cubic-bezier(.0.75, 0.82, 0.165, 1);
+.ts-slow {
+	transition: all 800ms cubic-bezier(0.075, 0.82, 0.165, 1);
 }
-
 .ts-out {
-  transition: all 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
+	transition: all 200ms cubic-bezier(0.55, 0.055, 0.675, 0.19);
 }
-
+.mask {
+	// Not sure what is happening but ok
+	-webkit-mask-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAIAAACQd1PeAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA5JREFUeNpiYGBgAAgwAAAEAAGbA+oJAAAAAElFTkSuQmCC);
+}
 .cf:before, .cf:after {
-  content: " ";
-  display: table;
+	content: " ";
+	display: table;
 }
 .cf:after {
-  clear: both;
+	clear: both;
 }
 .cf {
-  *zoom: 1;
+	*zoom: 1;
+}
+.hidden {
+  display: none;
+	visibility: hidden;
+}
+.hide {
+	display: none!important;
+}
+.opensans {
+	font-family: 'Open Sans', sans-serif;
+}
+.oswald {
+	font-family: 'Oswald', sans-serif;
+}
+.vollkorn {
+	font-family: 'Vollkorn', serif;
+}
+.roboto {
+	font-family: 'Roboto', sans-serif;
+}
+.playfair {
+	font-family: 'Playfair Display', serif;
+}
+.robotocondensed {
+	font-family: 'Roboto Condensed', sans-serif;
+}
+.robotomono {
+	font-family: 'Roboto Mono';
+}
+.button {
+	cursor: pointer;
+	padding: 5px 15px;
+	border-radius: 40px;
+	font-size: ms(0);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.65px;
+	border: 2px solid $lapis-blue;
+	&:not(.added) {
+		color: #fff;
+		background: $lapis-blue;
+		&.active {
+			@extend .ts;
+			color: $lapis-blue;
+			background: transparent;
+		}
+		&:hover:not(.active) {
+			background: $hoverable-blue-hover;
+			border-color: $hoverable-blue-hover;
+		}
+		&:active:not(.active) {
+			transform: translateY(1px);
+			background: $hoverable-blue-active;
+			border-color: $hoverable-blue-active;
+		}
+	}
 }

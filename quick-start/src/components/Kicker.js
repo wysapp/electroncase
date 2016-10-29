@@ -26,7 +26,19 @@ class Kicker extends Component {
     ipcRenderer.removeAllListeners('media-detected');
     ipcRenderer.removeAllListeners('media-lost');
     ipcRenderer.on('media-detected', (event, detectedMedia) => {
+      
+      if (detectedMedia.episode_number &&
+        detectedMedia.file_name !== this.props.currentScrobble.file_name) { 
+          
+          this.props.requestScrobble(detectedMedia);
+          this.setState({
+            visible: true
+          });
+        }
+    });
 
+    ipcRenderer.on('scrobble-confirm', (event, data) => {
+      this.props.confirmScrobble(data);
     })
 
   }
@@ -37,7 +49,7 @@ class Kicker extends Component {
   }
 
   render() {
-    console.log('eeeeeeeeeeeeeeeeeeee', this.props);
+    
     return (
       <div 
         className={cx({

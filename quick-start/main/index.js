@@ -4,6 +4,9 @@ const path = require('path');
 const { app, ipcMain, Tray, Menu, autoUpdater } = require('electron');
 const Main = require('./MainWindow');
 
+const Detector = require('./MediaDetector');
+const Notification = require('./NotificationWindow');
+
 const settings = require('./settings');
 const AutoLaunch = require('auto-launch');
 const autoLaunch = new AutoLaunch({
@@ -77,6 +80,13 @@ app.on('ready', ()=> {
 
   tray.setToolTip('Cash');
 
+  const notification = new Notification();
+  if ( __DEV__ ) {
+    notification.window.openDevTools({
+      detach: true
+    });
+  }
+
   main.window.on('close', (e) => {
     if (settings.get('minimizeToTray') && !mustQuit) {
       main.window.minimize();
@@ -93,12 +103,67 @@ app.on('ready', ()=> {
   });
 
 
+  let notificationTimeout;
+  ipcMain.on('scrobble-request', (event, scrobbleData) => {
+    notification.show();
+    notification.window.webContents.send('scrobble-request', scrobbleData);
+    clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+      notification.hide();
+    }, 11000);
+  });
+
+  // On update
+  ipcMain.on('scrobble-confirm', (event, scrobbleData) => {
+    main.window.webContents.send('scrobble-confirm', scrobbleData);
+    clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+      notification.hide();
+    }, 400);
+  });
+
+  // Cancelled scrobble
+  ipcMain.on('scrobble-cancel', () => {
+    clearTimeout(notificationTimeout);
+    notificationTimeout = setTimeout(() => {
+      notification.hide();
+    }, 400);
+  });
+
+  let prevMedia = {};
+  const detector = new Detector();
+  
   const scrobble = () => {
     if (settings.get('mediaDetection')) {
-      
+      detector.scan()
+      .then((parsedMedia) => {
+        console.log('ssssssssssssssssssssssssss', parsedMedia);
+        if (!_.isEqual(prevMedia, parsedMedia[0]) && !main.window.webContents.isLoading()) {
+          main.window.webContents.send('media-detected', parsedMedia[0]);
+          prevMedia = parsedMedia[0];
+        }
+        setTimeout(() => {
+          scrobble();          
+        }, 2000);
+      })
+      .catch(() => {
+        
+        main.window.webContents.send('media-lost');
+        prevMedia = {};
+        setTimeout(() => {
+          scrobble();
+        }, 2000);
+      });
+    } else {
+      main.window.webContents.send('media-lost');
+      prevMedia = {};
+      setTimeout(() => {
+        scrobble();
+      }, 2000);
     }
-  }
+  };
 
+  scrobble();
 
 });
 

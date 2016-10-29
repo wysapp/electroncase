@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import _ from 'lodash';
 
 import List from '../components/List';
-import ListSelectors from '../selectors/list';
-import * as ListActions from '../actions/list';
+import listSelectors from '../selectors/list';
+import * as listActions from '../actions/list';
 
 import { showSeries } from '../actions/series';
 
@@ -17,7 +17,7 @@ function mapDispatchToProps(dispatch) {
 }
 
 function mergeProps(stateProps, dispatchProps, ownProps) {
-  return _assign({}, {
+  return _.assign({}, {
     currentListType: ownProps.location.pathname === '/animelist' ? 'anime' : 'manage'
   }, stateProps, dispatchProps, ownProps);
 }

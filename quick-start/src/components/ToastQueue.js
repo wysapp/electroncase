@@ -5,6 +5,7 @@ import Toast from './Toast';
 
 class ToastQueue extends Component {
   render() {
+    console.log('ToastQueue-Props: ', this.props);
     return (
       <TransitionGroup
         className="toast-queue"
