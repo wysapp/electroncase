@@ -1,0 +1,38 @@
+.toast-queue {
+  position: absolute;
+  right: 60px;
+  bottom: 40px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.toast-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.toast {
+  overflow: hidden;
+  position: relative;
+  margin-top: 10px;
+  padding: 10px 20px 10px 37px;
+  border-radius: 4px;
+  text-align: center;
+  transform-origin: center center;
+  &.info {
+    color: #fff;
+    background: $lapis-blue;
+    box-shadow: 0 4px 12px transparentize($winter-black, 0.8);
+  }
+
+  &.ui-spinner {
+    position: absolute;
+    top: 17px;
+    left: 18px;
+  }
+}

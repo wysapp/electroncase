@@ -23,7 +23,7 @@ class Toast extends Component {
                 })} />
             : null
         }
-        
+        { this.props.type === 'loading' ? <Spinner /> : null }
         { this.props.message }
       </div>
     );

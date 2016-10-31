@@ -24,7 +24,7 @@ storage.get('activeSectionButtonId', function(err, id) {
 })
 
 document.body.addEventListener('click', function(event) {
-  
+ 
   if ( event.target.dataset.section) {
     handleSectionTrigger(event);
   } else if(event.target.dataset.modal) {
@@ -40,6 +40,7 @@ function handleSectionTrigger(event) {
   event.target.classList.add('is-selected');
 
   const sectionId = event.target.dataset.section + '-section';
+ 
   document.getElementById(sectionId).classList.add('is-shown');
 
   const buttonId = event.target.getAttribute('id');
@@ -58,6 +59,12 @@ function showMainContent() {
   document.querySelector('.js-content').classList.add('is-shown');
 }
 
+
+function handleModalTrigger(event) {
+  hideAllModals();
+  const modalId = event.target.dataset.modal + '-modal';
+  document.getElementById(modalId).classList.add('is-shown')
+}
 
 function hideAllModals() {
   const modals = document.querySelectorAll('.modal.is-shown');

@@ -23,6 +23,7 @@ class App extends Component {
 
   componentDidMount() {
     $(this.refs.app).on('mouseenter', '[data-tip]', (e) => {
+      console.log('event-item: mouseenter');
       $(e.target).attr('data-added', true);
       this.setState({
         tooltipPosition: $(e.target).data('tip-position') || 'top',
@@ -38,9 +39,22 @@ class App extends Component {
     
     return (
       <div id="app" ref="app">
-        
+        <ToastQueueContainer />
+        <ReactTooltip
+          multiline
+          type="dark"
+          effect="solid"
+          class={cx({
+            tooltip: true,
+            black: this.state.tooltipColor === 'black'
+          })}
+          offset={{ top: -15 }} />
         <TitleBar />
         <SideBar />
+        <div id="app-container">
+          {this.props.children}
+        </div>
+        
       </div>
     );
   }

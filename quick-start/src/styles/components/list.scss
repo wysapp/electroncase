@@ -1,0 +1,43 @@
+.list {
+  height: 100%;
+}
+
+.list-tabs {
+  @extend .cf;
+  background: $dover-gray;
+}
+
+.list-tab {
+  cursor: pointer;
+  float: left;
+  padding: 10px 20px;
+  height: 35px;
+  color: $ongray-byline;
+  font-weight: 700;
+  &:active {
+    color: $lapis-blue;
+    background: #fff;
+  }
+  &:hover:not(.active) {
+    background: mix(white, $dover-gray, 40%);
+  }
+}
+
+
+.list-tab-count {
+	margin-left: 5px;
+	padding: 1px 4px;
+	display: inline-block;
+	color: $onblack-byline!important;
+	font-size: ms(0);
+	background: $dover-gray;
+	border-radius: 2px;
+	transform: translateY(-1px);
+}
+
+.list-search-input {
+  padding: 10px;
+  width: 100%;
+  border: 0;
+  outline: 0;
+}

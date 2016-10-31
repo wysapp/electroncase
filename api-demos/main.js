@@ -41,22 +41,26 @@ function initialize () {
     }
 
     mainWindow.on('closed', function () {
+      console.log('main.js-event: closed');
       mainWindow = null
     })
   }
 
   app.on('ready', function () {
+    console.log('main.js-event: ready');
     createWindow()
     autoUpdater.initialize()
   })
 
   app.on('window-all-closed', function () {
+    console.log('main.js-event: window-all-closed');
     if (process.platform !== 'darwin') {
       app.quit()
     }
   })
 
   app.on('activate', function () {
+    console.log('main.js-event: activate');
     if (mainWindow === null) {
       createWindow()
     }
