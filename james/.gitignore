@@ -1,0 +1,5 @@
+build
+package
+node_modules
+binaries
+npm-debug.log

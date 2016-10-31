@@ -1,0 +1,61 @@
+.titlebar {
+  @extend .z-depth-1;
+  -webkit-app-region: drag;
+
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 48px;
+  background-color: $darkgray-dark;
+  z-index: 1;
+  -webkit-user-select: none;
+
+  .logo {
+    cursor: default;
+    width: 36px;
+    height: 36px;
+    margin: 6px;
+    margin-right: 12px;
+    background-color: $grapefruit-light;
+    color: $white;
+    display: block;
+    text-align: center;
+    font-size: 24px;
+    float: left;
+  }
+
+  a {
+    display: block;
+    float: left;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 12px;
+    cursor: pointer;
+    background: none;
+    color: rgba($white, .6);
+    border: none;
+
+    &:hover {
+      color: $white;
+    }
+
+    &.active {
+      color: $white;
+      border-bottom: 3px solid $grapefruit-light;
+    }
+
+    &.right {
+      float: right;
+    }
+
+    .label {
+      font-size: 14px;
+      line-height: 14px;
+    }
+
+    .fa {
+      padding-right: 8px;
+    }
+  }
+}
