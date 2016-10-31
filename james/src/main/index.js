@@ -4,15 +4,29 @@ import localShortcut from 'electron-localshortcut';
 
 import path from 'path';
 
+import constants from '../constants.js';
+import config from '../config.js';
+
+
+import createMenu from './menu.js';
+import createUrlMapper from './url-mapper.js';
+import createProxy from './proxy.js';
 
 if (squirrelStartup) {
   process.exit(0);
 }
 
 let mainWindow = null;
+createMenu();
 
 console.log('Loading URL mappings...');
+const urlMapper = createUrlMapper({
+  filename: `${constants.USER_DATA}/data.nedb`,
+  autoload: true
+});
 
+console.log('Starting proxy...');
+const proxy = createProxy(config, urlMapper.urlMapper);
 
 app.on('window-all-closed', () => app.quit());
 

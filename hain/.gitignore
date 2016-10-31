@@ -1,0 +1,15 @@
+node_modules
+/.vscode
+/_localStorage/
+/app/renderer
+
+/app/platform-util/build
+
+/plugins/
+/devplugins/
+
+/hain-debug.log
+/_launched_
+
+/out
+*.nupkg

@@ -4,6 +4,7 @@ import TitleBar from '../components/title-bar/title-bar.js';
 import Footer from '../components/footer/footer.js';
 
 const AppContainer = ({children}) => {
+
   return <div>
     <TitleBar />
     <div className="main-content">
