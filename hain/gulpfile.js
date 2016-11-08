@@ -33,21 +33,59 @@ gulp.task('renderer', ['deps', 'clean:renderer'], () => {
   return js;
 });
 
-
 function build(arch) {
   return new Promise((resolve, reject) => {
     packager({
       arch,
-    })
-  })
+      dir: path.join(__dirname, 'app'),
+      platform: 'win32',
+      asar: true,
+      ignore: /(renderer-jsx|__tests__)/gi,
+      overwrite: true,
+      out: path.join(__dirname, 'out'),
+      icon: path.join(__dirname, 'build', 'icon.ico'),
+      'version-string': {
+        ProductName: 'Hain',
+        CompanyName: 'Heejin Lee'
+      }
+    }, (err, appPath) => {
+      if (err) {
+        console.log(err);
+        return reject(err);
+      }
+      return resolve();
+    });
+  });
 }
 
+function buildZip(arch) {
+  const filename = `Hain-${arch}-v${appPkg.version}.zip`;
+  return gulp.src(`./out/Hain-win32-${arch}/**/*`)
+            .pipe(zip(filename))
+            .pipe(gulp.dest('./out/'));
+}
+
+function buildInstaller(arch) {
+  const filename = `HainSetup-${arch}-v${appPkg.version}.exe`;
+  return electronInstaller.createWindowsInstaller({
+    appDirectory: path.resolve(`./out/hain-win32-${arch}`),
+    outputDirectory: `./out/${arch}`,
+    authors: 'Heejin Lee',
+    title: 'Hain',
+    iconUrl: 'https://raw.githubusercontent.com/appetizermonster/Hain/master/build/icon.ico',
+    setupIcon: path.resolve('./build/icon.ico'),
+    loadingGif: path.resolve('./build/installer.gif'),
+    skipUpdateIcon: true, // HACK to resolve rcedit error (electron-winstaller)
+    noMsi: true
+  }).then(() => {
+    fs.renameSync(`./out/${arch}/Setup.exe`, `./out/${filename}`);
+  });
+}
 
 gulp.task('build', ['renderer', 'deps'], () => {
   return build('ia32')
     .then(() => build('x64'));
 });
-
 
 gulp.task('build-zip-ia32', ['build'], () => buildZip('ia32'));
 gulp.task('build-zip-x64', ['build'], () => buildZip('x64'));
@@ -58,13 +96,11 @@ gulp.task('build-installer', ['build', 'build-zip'], () => {
     .then(() => buildInstaller('x64'));
 });
 
-
 gulp.task('build-chocolatey', () => {
   return gulp.src('./chocolatey/**/*')
     .pipe(replace('${version}', appPkg.version))
     .pipe(gulp.dest('./out/chocolatey/'));
 });
-
 
 gulp.task('build-all', ['build-zip', 'build-installer', 'build-chocolatey']);
 
@@ -75,7 +111,4 @@ gulp.task('watch', ['renderer'], () => {
   gulp.watch('./app/renderer-jsx/**/*', opts, ['renderer']);
 });
 
-
 gulp.task('default', ['renderer']);
-
-
