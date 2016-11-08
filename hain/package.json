@@ -4,6 +4,7 @@
   "scripts": {
     "start": "electron .",
     "dev": "gulp && electron .",
+    "watch": "gulp watch",
     "build": "gulp build-all",
     "test": "cd app && jest",
     "tdd": "cd app && jest --watch"

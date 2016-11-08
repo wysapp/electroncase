@@ -80,5 +80,10 @@ class RpcChannel {
 module.exports = {
   create: (channel, send, listen) => {
     return new RpcChannel(channel, send, listen);
+  },
+  createWithIpcRenderer: (channel, ipc) => {
+    return new RpcChannel(channel, ipc.send.bind(ipc), (ipcChannel, listener) => {
+      ipc.on(ipcChannel, (evt, msg) => listener(msg));
+    });
   }
 }

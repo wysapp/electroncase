@@ -43,11 +43,31 @@ app.on('ready', () => {
 
   mainWindow.webContents.on('did-finish-load', ()=> {
 
+    mainWindow.webContents.send('proxy-status', proxy.status);
+
+    console.log('mainWindow-webContents-event: did-finish-load');
+    proxy.on('status', ({status, reason}) => {
+      console.log('proxy-event: status');
+      mainWindow.webContents.send('proxy-status', {
+        status,
+        reason
+      });
+    });
+
+
+    proxy.on('update', ({requestData}) => {
+      console.log('proxy-event: update');
+      mainWindow.webContents.send('proxy-sync', {
+        requestData
+      });
+    });
+
     mainWindow.show();
   })
 
 
   mainWindow.on('closed', function() {
+    
     mainWindow = null;
   })
 });

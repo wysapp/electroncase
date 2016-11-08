@@ -29,6 +29,11 @@ const onProxySync = throttle((evt, payload) => {
 
 ipc.on('proxy-sync', onProxySync);
 
+ipc.on('proxy-status', (evt, payload) => {
+  console.log('eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee', payload);  
+  // store.dispatch(updateProxyStatus(payload));
+})
+
 setupShortcuts(store);
 store.dispatch(init({ config }));
 

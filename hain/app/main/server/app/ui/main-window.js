@@ -20,15 +20,15 @@ module.exports = class MainWindow {
     const browserWindow = new BrowserWindow({
       width: 800,
       height: 530,
-      alwaysOnTop: true,
+      alwaysOnTop: false,
       center: true,
-      frame: false,
+      frame: true,
       show: false,
       closable: false,
-      minimizable: false,
-      maximizable: false,
-      moveable: false,
-      resizable: false,
+      // minimizable: false,
+      // maximizable: false,
+      // moveable: false,
+      // resizable: false,
       skipTaskbar: true
     });
 
@@ -44,7 +44,7 @@ module.exports = class MainWindow {
     browserWindow.on('blur', () => {
       if (browserWindow.webContents.isDevToolsOpened())
         return;
-      this.hide(true);
+      // this.hide(true);
     });
 
     this.browserWindow = browserWindow;
@@ -55,7 +55,7 @@ module.exports = class MainWindow {
       return;
     
     platformUtil.saveFocus();
-    windowUtil.centerWindowOnSelectedScreen(this.browserWindow);
+    // windowUtil.centerWindowOnSelectedScreen(this.browserWindow);
     this.browserWindow.show();
   }
 

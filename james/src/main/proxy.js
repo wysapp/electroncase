@@ -1,3 +1,4 @@
+import hoxy from 'hoxy';
 import fs from 'fs';
 import EventEmitter from 'events';
 
@@ -16,7 +17,7 @@ class ProxyHandler extends EventEmitter {
     this.cachingEnabled = false;
 
     this.onStatusChange_({status: constants.PROXY_STATUS_STARTING});
-
+    
     this.proxy = new Proxy(
       this.onUpdate_.bind(this),
       config,
@@ -29,6 +30,7 @@ class ProxyHandler extends EventEmitter {
 
   createHoxy() {
     const opts = {};
+    
     try {
       const key = fs.readFileSync(`${constants.USER_DATA}/root-ca.key.pem`);
       const cert = fs.readFileSync(`${constants.USER_DATA}/root-ca.crt.pem`);
@@ -36,6 +38,7 @@ class ProxyHandler extends EventEmitter {
       opts.certAuthority = {key, cert};
     } catch (e) {
       const [reason ] = e.message.split('\n');
+      
       this.onStatusChange_({
         status: constants.PROXY_STATUS_NO_HTTPS,
         error: true,
@@ -60,6 +63,7 @@ class ProxyHandler extends EventEmitter {
 
     return this.hoxy.listen(this.config.proxyPort, () => {
       if (this.status.error) return;
+      
       this.onStatusChange_({
         status: constants.PROXY_STATUS_WORKING
       });
@@ -122,7 +126,21 @@ class ProxyHandler extends EventEmitter {
 
   onStatusChange_(status) {
     this.status = status;
+    
     this.emit('status', status);
+  }
+
+  setCaching(caching) {
+    this.isCaching = caching;
+  }
+
+  isCaching() {
+    return this.isCaching;
+  }
+
+  setFilter(filter) {
+    this.filter = filter;
+    this.onUpdate_();
   }
 }
 
