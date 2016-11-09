@@ -20,7 +20,7 @@ class RpcChannel {
       } else if (msgType === 'call') {
         this._handleCallMessage(msg);
       }
-    })
+    });
   }
 
   _handleReturnMessage(msg) {
@@ -69,6 +69,14 @@ class RpcChannel {
         logger.error(e);
         this.send(this.channel, {type: 'return', id, error: e});
       });
+  }
+
+  call(topic, payload) {
+    const id = uuid.v4();
+    return new Promise((resolve, reject) => {
+      this.waitingHandlers[id] = { resolve, reject };
+      this.send(this.channel, { type: 'call', id, topic, payload});
+    });
   }
 
   define(topic, func) {

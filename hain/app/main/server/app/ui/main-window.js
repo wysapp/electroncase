@@ -13,7 +13,8 @@ module.exports = class MainWindow {
   constructor(workerProxy) {
     this.workerProxy = workerProxy;
     this.browserWindow = null;
-    
+    this.rpc = RpcChannel.create('#MainWindow', this._send.bind(this), this._on.bind(this));
+    this._setupHandlers();    
   }
 
   createWindow(onComplete) {
@@ -48,6 +49,23 @@ module.exports = class MainWindow {
     });
 
     this.browserWindow = browserWindow;
+  }
+
+  _send(channel, msg) {
+    this.browserWindow.webContents.send(channel, msg);
+  }
+
+  _on(channel, listener) {
+    ipc.on(channel, (evt, msg) => listener(msg));
+  }
+
+  _setupHandlers() {
+    this.rpc.define('search', (payload) => {
+      const { ticket, query } = payload;
+      this.workerProxy.searchAll(ticket, query);
+    });
+    
+    this.rpc.define('close', () => this.hide());
   }
 
   show() {

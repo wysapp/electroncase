@@ -25,7 +25,7 @@ module.exports = class Server {
     this.workerHandler.initialize();
     return this.appService.initializeAndLaunch()
       .then(() => {
-        console.log('ccccccccccccccccccccccc');
+        this.workerClient.loadWorker();
       });
   }
 }

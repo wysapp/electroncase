@@ -13,12 +13,20 @@ const ipc = require('electron').ipcRenderer;
 const RpcChannel = require('../main/shared/rpc-channel');
 const rpc = RpcChannel.createWithIpcRenderer('#mainWindow', ipc);
 
+const Ticket = require('./ticket');
+const searchTicket = new Ticket();
+const previewTicket = new Ticket();
+
 import { TextField, Avatar, SelectableContainerEnhance, List, ListItem, Subheader, FontIcon, IconButton } from 'material-ui';
 import MuiThemeProvider from 'material-ui/lib/MuiThemeProvider';
 import getMuiTheme from 'material-ui/lib/styles/getMuiTheme';
-
 import { Notification} from 'react-notification';
 
+
+const SelectableList = SelectableContainerEnhance(List);
+
+const SEND_INTERVAL = 30;
+const CLEAR_INTERVAL = 250;
 
 
 const muiTheme = getMuiTheme({
@@ -65,7 +73,20 @@ class AppContainer extends React.Component {
   }
 
   search(query) {
-    
+    const ticket = searchTicket.newTicket();
+
+    clearTimeout(this.lastSearchTimer);
+    this.lastSearchTimer = setTimeout(() => {
+      rpc.call('search', { ticket, query });
+    }, SEND_INTERVAL);
+
+    clearTimeout(this.lastClearTimer);
+    this.lastClearTimer = setTimeout(() => {
+      if ( this.lastResultTicket === ticket)
+        return;
+      
+      this.setState({results: [], selectionIndex: 0});
+    }, CLEAR_INTERVAL);
   }
 
   handleEsc() {
@@ -127,6 +148,10 @@ class AppContainer extends React.Component {
     this.search(query);
   }
 
+  handleUpdateSelectionIndex(evt, index) {
+    this.setState({ selectionIndex: index });
+  }
+
 
 
   render() {
@@ -134,6 +159,23 @@ class AppContainer extends React.Component {
     const results = this.state.results;
     const selectionIndex = this.state.selectionIndex;
     const selectedResult = results[selectionIndex];
+
+    const list = [];
+    const tabIndicator = '<kbd style=\'font-size: 7pt; margin-left: 5px; opacity: 0.8\'>tab</kbd>';
+    let lastGroup = null;
+
+
+    if (list.length === 0) {
+      const isLoading = !this.isLoaded;
+      const _text = isLoading ? 'Loading' : 'Sorry, No Results';
+      const _icon = isLoading ? 'fa fa-spinner fa-spin' : 'fa fa-heart';
+      list.push(
+        <ListItem 
+          primaryText={_text}
+          secondaryText="It may take some time to show results"
+          leftAvatar={<Avatar icon={<FontIcon className={_icon} />} />} />
+      );
+    }
 
     const containerStyles = {
       overflowX: 'hidden',
@@ -195,7 +237,12 @@ class AppContainer extends React.Component {
         </div>  
         <div key="containerWrapper">
           <div key="container" ref="listContainer" style={containerStyles}>
-
+            <SelectableList
+              key="list"
+              style={{ paddingTop: '0px', paddingBottom: '0px'}}
+              valueLink={{ value: selectionIndex, requestChange: this.handleUpdateSelectionIndex.bind(this)}}>
+              {list}
+            </SelectableList>
           </div>
           {previewBox}
         </div>
