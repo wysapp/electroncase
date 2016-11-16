@@ -68,4 +68,28 @@ module.exports = class AppService {
       logger.error(err);
     });
   }
+
+  open(query) {
+    this.mainWindow.show();
+    if ( query !== undefined)
+      this.mainWindow.setQuery(query);
+  }
+
+  restart() {
+    if ( this._isRestarting)
+      return;
+    this._isRestarting = true;
+    const argv = [].concat(process.argv);
+    if ( !lo_includes(argv, '--restarted'))
+      argv.push('--restarted');
+    if (!argv[0].startsWith('"'))
+      argv[0] = `"${argv[0]}"`;
+    
+    cp.exec(argv.join(' '));
+    setTimeout(() => this.quit(), 500);
+  }
+
+  quit() {
+    electronApp.exit(0);
+  }
 }

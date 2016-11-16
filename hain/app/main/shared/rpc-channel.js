@@ -20,7 +20,7 @@ class RpcChannel {
       } else if (msgType === 'call') {
         this._handleCallMessage(msg);
       }
-    })
+    });
   }
 
   _handleReturnMessage(msg) {
@@ -71,6 +71,14 @@ class RpcChannel {
       });
   }
 
+  call(topic, payload) {
+    const id = uuid.v4();
+    return new Promise((resolve, reject) => {
+      this.waitingHandlers[id] = { resolve, reject };
+      this.send(this.channel, { type: 'call', id, topic, payload});
+    });
+  }
+
   define(topic, func) {
     this.topicFuncs[topic] = func;
   }
@@ -80,5 +88,10 @@ class RpcChannel {
 module.exports = {
   create: (channel, send, listen) => {
     return new RpcChannel(channel, send, listen);
+  },
+  createWithIpcRenderer: (channel, ipc) => {
+    return new RpcChannel(channel, ipc.send.bind(ipc), (ipcChannel, listener) => {
+      ipc.on(ipcChannel, (evt, msg) => listener(msg));
+    });
   }
 }
