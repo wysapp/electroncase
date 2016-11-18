@@ -5,29 +5,31 @@ const shell = electron.shell;
 const BrowserWindow = electron.BrowserWindow;
 
 const platformUtil = require('../../../../platform-util');
+
 const windowUtil = require('./window-util');
 const RpcChannel = require('../../../shared/rpc-channel');
+
 const ipc = electron.ipcMain;
 
 module.exports = class MainWindow {
   constructor(workerProxy) {
     this.workerProxy = workerProxy;
     this.browserWindow = null;
-    this.rpc = RpcChannel.create('#MainWindow', this._send.bind(this), this._on.bind(this));
-    this._setupHandlers();    
+    this.rpc = RpcChannel.create('#mainWindow', this._send.bind(this), this._on.bind(this));
+    this._setupHandlers();
   }
 
   createWindow(onComplete) {
     const browserWindow = new BrowserWindow({
       width: 800,
       height: 530,
-      alwaysOnTop: false,
+      alwaysOnTop: true,
       center: true,
-      frame: true,
+      // frame: false,
       show: false,
       closable: false,
-      // minimizable: false,
-      // maximizable: false,
+      minimizable: false,
+      maximizable: false,
       // moveable: false,
       // resizable: false,
       skipTaskbar: true
@@ -35,7 +37,7 @@ module.exports = class MainWindow {
 
     if ( onComplete) 
       browserWindow.webContents.on('did-finish-load', onComplete);
-
+    
     browserWindow.webContents.on('new-window', (evt, url) => {
       shell.openExternal(encodeURI(url));
       evt.preventDefault();
@@ -60,12 +62,7 @@ module.exports = class MainWindow {
   }
 
   _setupHandlers() {
-    this.rpc.define('search', (payload) => {
-      const { ticket, query } = payload;
-      this.workerProxy.searchAll(ticket, query);
-    });
-    
-    this.rpc.define('close', () => this.hide());
+
   }
 
   show() {
@@ -73,18 +70,31 @@ module.exports = class MainWindow {
       return;
     
     platformUtil.saveFocus();
-    // windowUtil.centerWindowOnSelectedScreen(this.browserWindow);
+    windowUtil.centerWindowOnSelectedScreen(this.browserWindow);
     this.browserWindow.show();
   }
 
   hide(dontRestoreFocus) {
     if (this.browserWindow === null)
       return;
-    
     this.browserWindow.setPosition(0, -1000);
     this.browserWindow.hide();
 
     if (!dontRestoreFocus)
       platformUtil.restoreFocus();
+  }
+
+  toggle(query) {
+    if (this.browserWindow === null)
+      return;
+    
+    if (this.browserWindow.isVisible())
+      this.hide();
+    else {
+      this.show();
+
+      if ( query !== undefined)
+        this.setQuery(query);
+    }
   }
 }

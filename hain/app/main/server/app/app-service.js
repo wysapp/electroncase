@@ -11,8 +11,10 @@ const MainWindow = require('./ui/main-window');
 
 const TrayService = require('./ui/tray-service');
 
-const firstLaunch = require('./firstLaunch');
 
+const firstLaunch = require('./first-launch');
+const ShortcutService = require('./shortcut-service');
+const iconProtocol = require('./icon-protocol');
 const AutoLauncher = require('./auto-launcher');
 const autoLauncher = new AutoLauncher({
   name: 'Hain',
@@ -21,6 +23,7 @@ const autoLauncher = new AutoLauncher({
 
 module.exports = class AppService {
   constructor(prefManager, workerClient, workerProxy) {
+
     this._isRestarting = false;
 
     this.prefManager = prefManager;
@@ -29,64 +32,40 @@ module.exports = class AppService {
 
     this.mainWindow = new MainWindow(workerProxy);
     this.trayService = new TrayService(this, autoLauncher);
+    this.shortcutService = new ShortcutService(this, prefManager.appPref);
   }
 
   initializeAndLaunch() {
     const self = this;
-    return co(function* () {
-      
+    return co(function* () {      
       if (firstLaunch.isFirstLaunch)
         autoLauncher.enable();
       
       const isRestarted = (lo_includes(process.argv, '--restarted'));
       const silentLaunch = (lo_includes(process.argv, '--silent'));
-
       const shouldQuit = electronApp.makeSingleInstance((cmdLine, workingDir) => {
-        console.log('makeSingleInstance', cmdLine, workingDir);
-        if ( self._isRestarting) 
+        if (self._isRestarting)
           return;
         self.mainWindow.show();
-      })
+      });
 
-      if ( shouldQuit && !isRestarted) 
+      if (shouldQuit && !isRestarted)
         return electronApp.quit();
-      
+
       electronApp.on('ready', () => {
+        self.shortcutService.initializeShortcuts();
         self.mainWindow.createWindow(() => {
           if (!silentLaunch || isRestarted)
             self.mainWindow.show();
-          
-          if (isRestarted)
+          if(isRestarted)
             self.mainWindow.enqueueToast('Restarted');
         });
-
         self.trayService.createTray();
-
-      });
+        iconProtocol.register();
+      })
     }).catch((err) => {
-      console.log('co-catch:', err);
       logger.error(err);
-    });
-  }
-
-  open(query) {
-    this.mainWindow.show();
-    if ( query !== undefined)
-      this.mainWindow.setQuery(query);
-  }
-
-  restart() {
-    if ( this._isRestarting)
-      return;
-    this._isRestarting = true;
-    const argv = [].concat(process.argv);
-    if ( !lo_includes(argv, '--restarted'))
-      argv.push('--restarted');
-    if (!argv[0].startsWith('"'))
-      argv[0] = `"${argv[0]}"`;
-    
-    cp.exec(argv.join(' '));
-    setTimeout(() => this.quit(), 500);
+    })
   }
 
   quit() {

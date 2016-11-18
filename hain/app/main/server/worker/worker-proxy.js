@@ -5,7 +5,7 @@ module.exports = class WorkerProxy {
     this.workerClient = workerClient;
   }
 
-  searchAll(ticket, query) {
-    this.workerClient.rpc.call('searchAll', { ticket, query });
+  initialize(appPref) {
+    this.workerClient.rpc.call('initialize', { appPref});
   }
 }

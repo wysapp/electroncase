@@ -15,15 +15,15 @@ module.exports = class ApiService {
     };
 
     const moduleFiles = fs.readdirSync(`${__dirname}/apis`);
-    for(const moduleFile of moduleFiles) {
-      if ( !moduleFile.endsWith('.api.js')) {
+    for (const moduleFile of moduleFiles) {
+      if (!moduleFile.endsWith('.api.js'))
         continue;
-      }
-
+      
       const moduleName = moduleFile.substring(0, moduleFile.length - 7).toLowerCase();
+
       const ModuleClass = require(`./apis/${moduleFile}`);
       if (ModuleClass === undefined) {
-        logger.error(`ApiService: Can't load the module: ${moduleFile}`);
+        logger.error(`ApiService: can not load the module: ${moduleFile}`);
         continue;
       }
 

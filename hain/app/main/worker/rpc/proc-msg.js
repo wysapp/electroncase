@@ -1,6 +1,7 @@
 'use strict';
 
 const logger = require('../../shared/logger');
+
 const listeners = {};
 
 function send(channel, payload) {
@@ -8,13 +9,13 @@ function send(channel, payload) {
 }
 
 function on(channel, listener) {
-  listeners[channel] = listener;
+  listeners[channel ] = listener;
 }
 
 function start() {
   process.on('message', (msg) => {
     try {
-      const { channel, payload } = msg;
+      const { channel , payload } = msg;
       const listener = listeners[channel];
       listener(payload);
     } catch (e) {

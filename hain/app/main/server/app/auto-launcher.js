@@ -11,7 +11,6 @@ module.exports = class AutoLauncher {
       key: '\\Software\\Microsoft\\Windows\\CurrentVersion\\Run'
     });
   }
-
   enable() {
     return new Promise((resolve, reject) => {
       this.reg.set(this.appName, Registry.REG_SZ, this.appPath, (err) => {
@@ -21,17 +20,15 @@ module.exports = class AutoLauncher {
       });
     });
   }
-
   disable() {
     return new Promise((resolve, reject) => {
       this.reg.remove(this.appName, (err) => {
-        if(err)
-          return reject(err);        
+        if (err)
+          return reject(err);
         resolve();
       });
     });
   }
-
   isEnabled() {
     return new Promise((resolve, reject) => {
       this.reg.get(this.appName, (err, item) => {

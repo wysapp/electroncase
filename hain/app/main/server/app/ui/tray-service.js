@@ -15,52 +15,53 @@ module.exports = class TrayService {
     this.autoLauncher = autoLauncher;
     this.autoLaunchActivated = false;
   }
-
   createTray() {
-    const self =this;
+    const self = this;
     return co(function* () {
       try {
         self.autoLaunchActivated = yield self.autoLauncher.isEnabled();
-      } catch(e) {}
+      } catch (e) {}
       self._createTray();
     });
   }
-
   _createTray() {
-    const iconPath = process.platform !== 'linux'
-      ? path.normalize(`${__dirname}/../../../../images/tray_16.ico`)
-      : path.normalize(`${__dirname}/../../../../images/hain.png`);
-    
+    const iconPath = process.platform !== 'linux' ?
+      path.normalize(`${__dirname}/../../../../images/tray_16.ico`) :
+      path.normalize(`${__dirname}/../../../../images/hain.png`);
+
     const tray = new Tray(iconPath);
     const menu = Menu.buildFromTemplate([
       {
         label: 'Hain', click: () => this.appService.open()
-      }, {
+      },
+      {
         label: 'Auto-launch', type: 'checkbox', checked: this.autoLaunchActivated,
         click: () => this.toggleAutoLaunch()
-      }, {
+      },
+      {
         type: 'separator'
-      }, {
+      },
+      {
         label: 'Preferences', click: () => this.appService.openPreferences()
-      }, {
+      },
+      {
         label: 'Restart', click: () => this.appService.restart()
-      }, {
+      },
+      {
         label: 'Quit', click: () => this.appService.quit()
       }
     ]);
-
     tray.on('click', () => this.appService.open());
     tray.setToolTip('Hain');
     tray.setContextMenu(menu);
 
     this.tray = tray;
   }
-
   toggleAutoLaunch() {
     if (this.autoLaunchActivated)
       this.autoLauncher.disable();
-    else 
+    else
       this.autoLauncher.enable();
     this.autoLaunchActivated = !this.autoLaunchActivated;
   }
-}
+};

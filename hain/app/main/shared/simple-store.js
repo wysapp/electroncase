@@ -3,16 +3,14 @@
 const fse = require('fs-extra');
 const storage = require('node-persist');
 
-
 function createStorage(dir) {
   fse.ensureDirSync(dir);
-
   const localStorage = storage.create({dir});
   localStorage.initSync();
   return localStorage;
 }
 
-module.exports = class SimpleStore{
+module.exports = class SimpleStore {
   constructor(dir) {
     this.localStorage = createStorage(dir);
   }
