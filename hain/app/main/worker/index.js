@@ -27,5 +27,14 @@ rpc.define('initialize', (payload) => {
     handleExceptions();
     appPrefCopy.update(appPref);
     globalProxyAgent.initialize(appPrefCopy);
-  })
-})
+
+    plugins = require('./plugins')(workerContext);
+    yield* plugins.initialize();
+
+    rpc.call('notifyPluginsLoaded');
+  }).catch((e) => {
+    const err = e.stack || e;
+    rpc.call('onError', err);
+    logger.error(err);
+  });
+});
