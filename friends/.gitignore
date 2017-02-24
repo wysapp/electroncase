@@ -1,8 +1,0 @@
-.DS_Store
-app/style/*.css
-friendsdb/
-node_modules/
-pkg/
-public-keys/
-Friends.app
-*.log
