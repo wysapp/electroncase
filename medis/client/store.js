@@ -5,6 +5,8 @@ import thunkMiddleware from 'redux-thunk';
 import reducers from './reducers';
 
 import Immutable from 'immutable';
+
+
 import { addInstance } from './backend/instance';
 import { getFavorites } from './backend/favorite';
 import { getPatternStore } from './backend/patternStore';

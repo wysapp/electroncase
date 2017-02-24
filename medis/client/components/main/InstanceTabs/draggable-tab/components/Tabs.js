@@ -4,16 +4,17 @@ import _ from 'lodash';
 import React from 'react';
 import Draggable from 'react-draggable';
 
-
 class Tabs extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props);
-    const defaultState = this._tabStateFromProps(this.props);
-    defaultState.selectedTab = this.props.selectedTab 
-      ? this.props.selectedTab 
-      : this.props.tabs ? this.props.tabs[0].key : '';
 
+    const defaultState = this._tabStateFromProps(this.props);
+    defaultState.selectedTab = this.props.selectedTab
+      ? this.props.selectedTab 
+      : this.props.tabs 
+        ? this.props.tabs[0].key
+        : '';
+    
     this.state = defaultState;
 
     this.startPositions = [];
@@ -26,51 +27,29 @@ class Tabs extends React.Component {
       tabs[idx++] = tab;
     });
 
-    return {tabs};
-  }
-
-  handleDrag(key, e) {
-
-  }
-
-  handleDragStop(key, e) {
-
-  }
-
-  handleTabClick(key) {
-
-  }
-
-  handleCloseButtonClick(key, e) {
-
-  }
-
-  handleAddButtonClick(e) {
-    
+    return { tabs };
   }
 
   render() {
+    
     const tabs = _.map(this.state.tabs, (tab) => {
       const tabTitle = tab.props.title;
-
+      
       return (
-        <Draggable
+        <Draggable 
           key={'draggable_tabs_' + tab.key}
           axis='x'
           cancel='.rdTabCloseIcon'
-          start={{ x: 0, y: 0}}
+          start={{x: 0, y: 0}}
           moveOnStartChange={true}
           zIndex={100}
           bounds='parent'
-          onDrag={this.handleDrag.bind(this, tab.key)}
-          onStop={this.handleDragStop.bind(this, tab.key)}>
-          <div
-            onClick={this.handleTabClick.bind(this, tab.key)}
+          >
+          <div 
             className={this.state.selectedTab === tab.key ? 'tab-item active' : 'tab-item'}
             ref={tab.key}>
             {tabTitle}
-            <span className="icon icon-cancel icon-close-tab"
-              onClick={this.handleCloseButtonClick.bind(this, tab.key)}></span>
+            <span className="icon icon-cancel icon-close-tab"></span>
           </div>
         </Draggable>
       );
@@ -78,11 +57,23 @@ class Tabs extends React.Component {
 
     return <div className="tab-group">
       {tabs}
-      <div className="tab-item tab-item-btn" onClick={this.handleAddButtonClick.bind(this)}>
+      <div className="tab-item tab-item-btn" >
         {this.props.tabAddButton}
       </div>
     </div>;
   }
 }
+
+
+Tabs.defaultProps = {
+  tabAddButton: (<span>{'+'}</span>),
+}
+
+Tabs.propTypes = {
+  tabs: React.PropTypes.arrayOf(React.PropTypes.element),
+
+  selectedTab: React.PropTypes.string,
+  tabAddButton: React.PropTypes.element,
+};
 
 export default Tabs;

@@ -20,17 +20,18 @@ class WindowManager extends EventEmitter {
     if (!type) {
       type = 'main';
     }
+
     const option = {};
     if (type === 'main') {
       option.width = 960;
       option.height = 600;
-      option.show = false;
+      option.show = true;
       option.minWidth = 840;
       option.minHeight = 200;
-    } else if (type === 'pattern-manager') {
+    } else if ( type === 'pattern-manager') {
       option.width = 600;
       option.height = 300;
-      option.title = 'Manage Patterns';
+      option.title = 'Manager Patterns';
       option.resizable = false;
       option.fullscreen = false;
       option.show = false;
@@ -52,15 +53,8 @@ class WindowManager extends EventEmitter {
         this.emit('blur');
       }
     });
-    this.emit('focus');
-  }
 
-  dispatch(action, args) {
-    this.windows.forEach(win => {
-      if (win && win.webContents) {
-        win.webContents.send('action', action, args);
-      }
-    });
+    this.emit('focus');
   }
 }
 

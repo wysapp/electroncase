@@ -32,7 +32,7 @@ const menuTemplate = [{
       }
     }
   }, {
-    label: 'Toogle Full Screen',
+    label: 'Toggle Full Screen',
     accelerator: (function() {
       if (process.platform === 'darwin') {
         return 'Ctrl+Command+F';
@@ -53,8 +53,7 @@ const menuTemplate = [{
       return 'Ctrl+Shift+I';
     })(),
     click(item, focusedWindow) {
-      
-      if (focusedWindow) {
+      if ( focusedWindow) {
         focusedWindow.toggleDevTools();
       }
     }
@@ -77,7 +76,7 @@ const menuTemplate = [{
   submenu: [{
     label: 'Report an Issue...',
     click() {
-      require('shell').openExternal('http://www.github.com');
+      require('shell').openExternal('mailto:wys@126.com');
     }
   }, {
     label: 'Learn More',
@@ -87,21 +86,60 @@ const menuTemplate = [{
   }]
 }];
 
-
 let baseIndex = 0;
-if ( process.platform == 'darwin') {
+if (process.platform == 'darwin') {
   baseIndex = 1;
-
   menuTemplate.unshift({
     label: app.getName(),
     submenu: [{
       label: 'About ' + app.getName(),
       role: 'about'
+    }, {
+      type: 'separator'
+    }, {
+      label: 'Services',
+      role: 'services',
+      submenu:[]
+    }, {
+      type: 'separator'
+    }, {
+      label: 'Hide ' + app.getName(),
+      accelerator: 'Command+H',
+      role: 'hide'
+    }, {
+      label: 'Hide Others',
+      accelerator: 'Command+Shift+H',
+      role: 'hideothers'
+    }, {
+      label: 'Show All',
+      role: 'unhide'
+    }, {
+      type: 'separator'
+    }, {
+      label: 'Quit',
+      accelerator: 'Command+Q',
+      click() {
+        app.quit();
+      }
     }]
-  })
-}
-
+  });
+};
 
 const menu = Menu.buildFromTemplate(menuTemplate);
 
+/*if (process.env.NODE_ENV !== 'debug') {
+  menu.items[baseIndex + 2].submenu.items[0].visible = false;
+  menu.items[baseIndex + 2].submenu.items[2].visible = false;
+}
+
+windowManager.on('blur', function () {
+  menu.items[baseIndex + 0].submenu.items[3].enabled = false;
+  menu.items[baseIndex + 0].submenu.items[4].enabled = false;
+});
+
+windowManager.on('focus', function () {
+  menu.items[baseIndex + 0].submenu.items[3].enabled = true;
+  menu.items[baseIndex + 0].submenu.items[4].enabled = true;
+});
+*/
 module.exports = menu;

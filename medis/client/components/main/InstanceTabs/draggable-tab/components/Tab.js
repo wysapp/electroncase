@@ -2,6 +2,7 @@
 
 import React from 'react';
 
+
 class Tab extends React.Component {
   constructor(props) {
     super(props);
@@ -13,10 +14,11 @@ class Tab extends React.Component {
   }
 }
 
+
 Tab.defaultProps = {
   title: 'Quick Connect',
   disableClose: false
-};
+}
 
 Tab.propTypes = {
   title: React.PropTypes.oneOfType([
